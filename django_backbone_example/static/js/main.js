@@ -37,6 +37,7 @@
             }
             if(this.hasBomb()){
                 this.set({gameState:2});
+                this.trigger('bomb:exploded');
             }
             else{
                 this.set({gameState:3});
@@ -55,7 +56,12 @@
                 return new this.model({hasBomb:false});
             }
         },
-
+        initialize:function(){
+            this.exploded = false;
+             this.listenTo(this,'bomb:exploded', function(){
+                 this.exploded = true;
+             });
+        },
         _fillCount: function(){
             var width = this.width();
             console.log('width');
@@ -195,6 +201,25 @@
                 remaining: this.collection.remaining(),
                 total: this.collection.length
             };
+            var dom = this.template(context);
+            this.$el.html(dom);
+            return this;
+        }
+    });
+    window.Message = Backbone.View.extend({
+        template: _.template('<%=message%>'),
+        initialize: function(){
+            this.listenTo(this.collection,'change', this.render);
+            this.listenTo(this.collection,'bomb:exploded', this.render);
+        },
+        render: function(){
+            var context = {message:""};
+            if(this.collection.exploded){
+                context.message = 'You Fail!!';
+            }
+            if(this.collection.remaining() === 0){
+                context.message = 'Success !!';
+            }
             var dom = this.template(context);
             this.$el.html(dom);
             return this;

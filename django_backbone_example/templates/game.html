@@ -8,6 +8,7 @@
         <div class="row">
             <div class="col-sm-2">
                 <h3 id="count"></h3>
+                <h4 id="message"></h4>
             </div>
             <div class="col-sm-10">
                 <div class="jumbotron clearfix" id="mine">
@@ -20,13 +21,18 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script>
         $(function(){
+
             collection = new BombCollection();
             collection.fillModels(3);
 
             game = new GameView({el:$('#mine'), collection:collection});
             game.render();
+
             counter = new CountView({el:$('#count'), collection:collection});
             counter.render();
+
+            message = new Message({el:$('#message'), collection:collection});
+            message.render();
         })
     </script>
 {% endblock %}
