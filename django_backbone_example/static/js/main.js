@@ -1,4 +1,4 @@
-(function(Backbone, _){
+(function(Backbone, _ ){
     'use strict';
     window.BombModel = Backbone.Model.extend({
         defaults:{
@@ -58,14 +58,12 @@
         },
         initialize:function(){
             this.exploded = false;
-             this.listenTo(this,'bomb:exploded', function(){
-                 this.exploded = true;
-             });
+            this.listenTo(this,'bomb:exploded', function(){
+                this.exploded = true;
+            });
         },
         _fillCount: function(){
             var width = this.width();
-            console.log('width');
-            console.log(width);
             var filterOutbound = function(item){
                 var x = item[0];
                 var y = item[1];
@@ -84,17 +82,11 @@
                     [x+1, y],
                     [x+1, y+1]
                 ];
-                console.log('i ' + i);
-                console.log('x ' + x);
-                console.log('y' + y);
-                console.log(surrendings);
                 surrendings = _.filter(surrendings,filterOutbound);
                 var sum = 0;
                 for(var j = 0; j< surrendings.length; ++j){
                     var surrendingX = surrendings[j][0];
                     var surrendingY = surrendings[j][1];
-                    console.log(surrendingY);
-                    console.log(surrendingX);
                     var model = this.at(surrendingY*width + surrendingX);
                     if(model.hasBomb()){
                        sum+=1;
@@ -167,24 +159,24 @@
 
             var dom = this.template(_.extend(templateContext,attributes));
             this.$el.html(dom);
-            if(this.isLast){
-                this.$el.addClass('BtnView--last');
-            }
             return this;
         }
+    });
+
+    window.NewLineButtonView = window.ButtonnView.extend({
+        className: "BtnView BtnView--last"
     });
 
     window.GameView = Backbone.View.extend({
         childView : window.ButtonnView,
         render: function(){
             this.collection.each(function(model, index){
-                var isLast = false;
+                var ChildView = window.ButtonnView;
                 if( (index % this.collection.width()) === 0 ){
-                    isLast = true;
+                    ChildView = window.NewLineButtonView;
                 }
-                var view = new this.childView({
-                    model: model,
-                    isLast: isLast
+                var view = new ChildView({
+                    model: model
                 });
                 this.$el.append(view.render().el); // adding all the person objects.
             }, this);
@@ -226,4 +218,4 @@
         }
     });
 
-})(window.Backbone, window._);
+})(window.Backbone, window._, window.$);

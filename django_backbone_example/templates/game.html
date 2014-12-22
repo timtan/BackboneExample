@@ -14,7 +14,9 @@
                 <div class="jumbotron clearfix" id="mine">
                 </div>
             </div>
+            <div id="lipo-region">   </div>
         </div>
+
     </div>
 
     {% include  '_marionettejs.html'%}
@@ -22,16 +24,32 @@
     <script>
         $(function(){
 
-            collection = new BombCollection();
-            collection.fillModels(3);
+            lipoBombModel = new BombModel();
+            lipoBombView = new ButtonnView({
+                model: lipoBombModel,
+                el: $('#lipo-region')
+            });
+            lipoBombView.render();
 
-            game = new GameView({el:$('#mine'), collection:collection});
+            collection = new BombCollection();
+            collection.fillModels(10);
+
+            game = new GameView({
+                el:$('#mine'),
+                collection:collection
+            });
             game.render();
 
-            counter = new CountView({el:$('#count'), collection:collection});
+            counter = new CountView({
+                el:$('#count'),
+                collection:collection
+            });
             counter.render();
 
-            message = new Message({el:$('#message'), collection:collection});
+            message = new Message({
+                el:$('#message'),
+                collection:collection
+            });
             message.render();
         })
     </script>
