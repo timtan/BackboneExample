@@ -43,3 +43,14 @@ Styleguide 1.1
 }
 
 
+.GameView{
+  @include clearfix;
+}
+
+.BtnView{
+  float: left;
+}
+
+.BtnView--last{
+  clear: left;
+}

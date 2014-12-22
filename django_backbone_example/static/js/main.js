@@ -53,10 +53,14 @@
         },
         fillModels: function(width){
             width = width || 10;
+            this.reset();
             for(var i = 0 ; i< width*width; ++i){
                 var model = this._makeModel();
                 this.add(model);
             }
+        },
+        width: function(){
+            return Math.sqrt(this.length);
         }
     });
 
@@ -66,6 +70,7 @@
         events:{
             'click [data-button]': 'handleClick'
         },
+        className: "BtnView",
         initialize:function(){
             this.listenTo(this.model, 'change', this.render);
         },
@@ -76,7 +81,6 @@
 
             var attributes = this.model.attributes;
             var templateContext = {};
-            console.log(this.model);
             if(this.model.isExploded()){
                 templateContext.btn = 'btn-danger';
             }
@@ -94,7 +98,19 @@
     });
 
     window.GameView = Backbone.View.extend({
+        childView : window.ButtonnView,
         render: function(){
+            this.collection.each(function(model, index){
+                var className = 'BtnView ';
+                if( (index % this.collection.width()) === 0 ){
+                    className += 'BtnView--last';
+                }
+                var view = new this.childView({
+                    model: model,
+                    className: className
+                });
+                this.$el.append(view.render().el); // adding all the person objects.
+            }, this);
         }
     });
 

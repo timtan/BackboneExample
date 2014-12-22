@@ -18,8 +18,9 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script>
         $(function(){
-            model = new BombModel();
-            btn = new ButtonnView({el:$('#mine'), model:model});
+            collection = new BombCollection();
+            collection.fillModels(10);
+            btn = new GameView({el:$('#mine'), collection:collection});
             btn.render();
         })
     </script>
