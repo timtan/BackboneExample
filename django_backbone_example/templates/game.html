@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
-{% load compress static %}
+{% load staticfiles %}
+{% load compress %}
+
 
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
                 <div class="jumbotron" id="mine">
+
                 </div>
             </div>
         </div>
@@ -13,4 +16,11 @@
 
     {% include  '_marionettejs.html'%}
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        $(function(){
+            model = new BombModel();
+            btn = new ButtonnView({el:$('#mine'), model:model});
+            btn.render();
+        })
+    </script>
 {% endblock %}

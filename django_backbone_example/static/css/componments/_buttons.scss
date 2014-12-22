@@ -14,12 +14,12 @@ Your standard form button.
 .btn-success  -  success
 
 Example:
-    <button class="MineBtn $modifier_class"></button>
+    <button class="BombBtn $modifier_class"></button>
 
 Styleguide 1.1
 */
 
-.MineBtn{
+.BombBtn{
   @extend .btn;
   min-width: 30px;
   height: 30px;

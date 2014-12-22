@@ -1,7 +1,7 @@
 (function(Backbone, _){
     'use strict';
     window.BombModel = Backbone.Model.extend({
-        default:{
+        defaults:{
             hasBomb:false,
             /*
                 0: default
@@ -11,11 +11,6 @@
              */
             gameState:0
         },
-        initialize:function(options){
-            if(options.hasBomb){
-                this.set({hasBomb:options.hasBomb});
-            }
-        },
         hasBomb:function(){
             return this.get('hasBomb');
         },
@@ -23,17 +18,17 @@
             this.set({'gameState':1});
             return this;
         },
+        isUnTouched:function(){
+            return this.get('gameState') === 0;
+        },
+        isUnknown:function(){
+            return this.get('gameState') === 1;
+        },
         isExploded:function(){
             return this.get('gameState') === 2;
         },
         isClean:function(){
             return this.get('gameState') === 3;
-        },
-        isDefault:function(){
-            return this.get('gameState') === 0;
-        },
-        isUnknown:function(){
-            return this.get('gameState') === 1;
         },
         handleOpen:function(){
             if(this.hasBomb()){
@@ -45,7 +40,7 @@
         }
     });
 
-    window.BombCollection = Backbone.Collection({
+    window.BombCollection = Backbone.Collection.extend({
         model: window.BombModel,
         _makeModel: function(){
             var random = _.random(0,100);
@@ -55,17 +50,52 @@
             else{
                 return new this.model({hasBomb:false});
             }
-
         },
-        initialize:function(options){
-            var width = options.width|| 10;
+        fillModels: function(width){
+            width = width || 10;
             for(var i = 0 ; i< width*width; ++i){
-                this.add(this._makeModel());
+                var model = this._makeModel();
+                this.add(model);
             }
         }
     });
-    window.ButtonnView = Backbone.View.extend({
 
+
+    window.ButtonnView = Backbone.View.extend({
+        template: _.template("<button class='BombBtn <%= btn %>' data-button></button>"),
+        events:{
+            'click [data-button]': 'handleClick'
+        },
+        initialize:function(){
+            this.listenTo(this.model, 'change', this.render);
+        },
+        handleClick:function(){
+            this.model.handleOpen();
+        },
+        render: function(){
+
+            var attributes = this.model.attributes;
+            var templateContext = {};
+            console.log(this.model);
+            if(this.model.isExploded()){
+                templateContext.btn = 'btn-danger';
+            }
+            else if(this.model.isUnTouched()){
+                templateContext.btn = 'btn-default';
+            }
+            else if(this.model.isClean()){
+                templateContext.btn = 'btn-success';
+            }
+
+            var dom = this.template(_.extend(templateContext,attributes));
+            this.$el.html(dom);
+            return this;
+        }
+    });
+
+    window.GameView = Backbone.View.extend({
+        render: function(){
+        }
     });
 
 })(window.Backbone, window._);
