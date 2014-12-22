@@ -1,0 +1,11 @@
+*.pyc
+*~
+build
+*.db
+*.log
+.idea
+.DS_Store
+venv
+VENV
+*.swp
+assets

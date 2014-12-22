@@ -1,0 +1,45 @@
+/*
+Buttons
+
+Styleguide 1
+*/
+
+
+/*
+Your standard form button.
+
+.btn-default  -  default
+.btn-danger   -  danger
+.btn-warning  -  warning
+.btn-success  -  success
+
+Example:
+    <button class="MineBtn $modifier_class"></button>
+
+Styleguide 1.1
+*/
+
+.MineBtn{
+  @extend .btn;
+  min-width: 30px;
+  height: 30px;
+  padding: 6px;
+}
+
+.btn-default::before{
+  content: " ";
+}
+
+.btn-danger::before{
+  content:"X";
+}
+
+.btn-success::before{
+  content:"O";
+}
+
+.btn-warning::before{
+  content: "?";
+}
+
+
