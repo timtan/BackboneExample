@@ -70,8 +70,9 @@
         events:{
             'click [data-button]': 'handleClick'
         },
-        className: "BtnView",
-        initialize:function(){
+        className: 'BtnView',
+        initialize:function(options){
+            this.isLast = options.isLast;
             this.listenTo(this.model, 'change', this.render);
         },
         handleClick:function(){
@@ -93,6 +94,9 @@
 
             var dom = this.template(_.extend(templateContext,attributes));
             this.$el.html(dom);
+            if(this.isLast){
+                this.$el.addClass('BtnView--last');
+            }
             return this;
         }
     });
@@ -101,13 +105,13 @@
         childView : window.ButtonnView,
         render: function(){
             this.collection.each(function(model, index){
-                var className = 'BtnView ';
+                var isLast = false;
                 if( (index % this.collection.width()) === 0 ){
-                    className += 'BtnView--last';
+                    isLast = true;
                 }
                 var view = new this.childView({
                     model: model,
-                    className: className
+                    isLast: isLast
                 });
                 this.$el.append(view.render().el); // adding all the person objects.
             }, this);
