@@ -6,9 +6,11 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-2">
+                <h3 id="count"></h3>
+            </div>
+            <div class="col-sm-10">
                 <div class="jumbotron clearfix" id="mine">
-
                 </div>
             </div>
         </div>
@@ -22,6 +24,8 @@
             collection.fillModels(10);
             btn = new GameView({el:$('#mine'), collection:collection});
             btn.render();
+            counter = new CountView({el:$('#count'), collection:collection});
+            counter.render();
         })
     </script>
 {% endblock %}
