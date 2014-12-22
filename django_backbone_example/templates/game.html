@@ -21,9 +21,10 @@
     <script>
         $(function(){
             collection = new BombCollection();
-            collection.fillModels(10);
-            btn = new GameView({el:$('#mine'), collection:collection});
-            btn.render();
+            collection.fillModels(3);
+
+            game = new GameView({el:$('#mine'), collection:collection});
+            game.render();
             counter = new CountView({el:$('#count'), collection:collection});
             counter.render();
         })

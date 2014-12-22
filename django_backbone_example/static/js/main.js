@@ -48,7 +48,7 @@
         model: window.BombModel,
         _makeModel: function(){
             var random = _.random(0,100);
-            if(random<33.6){
+            if(random<23.6){
                 return new this.model({hasBomb:true});
             }
             else{
