@@ -1,16 +1,16 @@
 (function(Backbone, _ ){
     'use strict';
+    var BombModelState = {
+        DEFAULT: 0,
+        UNKNOWN: 1,
+        EXPLODED: 2,
+        CLEAN: 3
+    };
     window.BombModel = Backbone.Model.extend({
         defaults:{
             hasBomb:false,
             number:0,
-            /*
-                0: default
-                1: unknown
-                2: exploded
-                3: clean
-             */
-            gameState:0
+            gameState: BombModelState.DEFAULT
         },
         hasBomb:function(){
             return this.get('hasBomb');
@@ -20,27 +20,27 @@
             return this;
         },
         isUnTouched:function(){
-            return this.get('gameState') === 0;
+            return this.get('gameState') === BombModelState.DEFAULT;
         },
         isDoubt:function(){
-            return this.get('gameState') === 1;
+            return this.get('gameState') === BombModelState.UNKNOWN;
         },
         isExploded:function(){
-            return this.get('gameState') === 2;
+            return this.get('gameState') === BombModelState.EXPLODED;
         },
         isClean:function(){
-            return this.get('gameState') === 3;
+            return this.get('gameState') === BombModelState.CLEAN;
         },
         handleOpen:function(){
             if(this.isDoubt()){
                 return;
             }
             if(this.hasBomb()){
-                this.set({gameState:2});
+                this.set({gameState:BombModelState.EXPLODED});
                 this.trigger('bomb:exploded');
             }
             else{
-                this.set({gameState:3});
+                this.set({gameState:BombModelState.CLEAN});
             }
         }
     });
@@ -94,7 +94,6 @@
                 }
                 var currentModel = this.at(y*width + x);
                 currentModel.set({number:sum});
-
             }
         },
         fillModels: function(width){
@@ -109,7 +108,7 @@
         width: function(){
             return Math.sqrt(this.length);
         },
-        remaining: function(){
+        numberOfSafe: function(){
            return this.reduce(function(memo, model ){
                if(!model.hasBomb() && model.isUnTouched()){
                   return memo + 1;
@@ -121,14 +120,15 @@
 
 
     window.ButtonnView = Backbone.View.extend({
-        template: _.template("<button class='BombBtn <%= btn %>' data-button><%=content%></button>"),
+        template: _.template(
+            "<button class='BombBtn <%= btnClass %>' data-button><%=content%></button>"
+        ),
         events:{
             'click [data-button]': 'handleClick',
             'contextmenu [data-button]': 'handleRightClick'
         },
         className: 'BtnView',
-        initialize:function(options){
-            this.isLast = options.isLast;
+        initialize:function(){
             this.listenTo(this.model, 'change', this.render);
         },
         handleClick:function(){
@@ -140,24 +140,29 @@
         },
         render: function(){
 
-            var attributes = this.model.attributes;
-            var templateContext = {content:" "};
+            var templateContext = {
+                btnClass: 'bt-default',
+                content:" "
+            };
             if(this.model.isExploded()){
-                templateContext.btn = 'btn-danger';
+                templateContext.btnClass = 'btn-danger';
                 templateContext.content = "X";
             }
             else if(this.model.isUnTouched()){
-                templateContext.btn = 'btn-default';
+                templateContext.btnClass = 'btn-default';
             }
             else if(this.model.isDoubt()){
-                templateContext.btn = 'btn-warning';
+                templateContext.btnClass = 'btn-warning';
             }
             else if(this.model.isClean()){
-                templateContext.btn = 'btn-success';
+                templateContext.btnClass = 'btn-success';
                 templateContext.content = this.model.get('number');
             }
 
-            var dom = this.template(_.extend(templateContext,attributes));
+            var dom = this.template(
+                _.extend(templateContext,this.model.attributes)
+            );
+
             this.$el.html(dom);
             return this;
         }
@@ -183,14 +188,18 @@
         }
     });
 
-    window.CountView = Backbone.View.extend({
-        template: _.template('<%=remaining%>/<%=total%>'),
+
+    var BombAwareView = Backbone.View.extend({
         initialize: function(){
-            this.listenTo(this.collection,'change', this.render);
-        },
+            this.listenTo(this.collection,'all', this.render);
+        }
+    });
+
+    window.CountView = BombAwareView.extend({
+        template: _.template('<%=remaining%>/<%=total%>'),
         render: function(){
             var context = {
-                remaining: this.collection.remaining(),
+                remaining: this.collection.numberOfSafe(),
                 total: this.collection.length
             };
             var dom = this.template(context);
@@ -198,18 +207,15 @@
             return this;
         }
     });
-    window.Message = Backbone.View.extend({
+
+    window.Message = BombAwareView.extend({
         template: _.template('<%=message%>'),
-        initialize: function(){
-            this.listenTo(this.collection,'change', this.render);
-            this.listenTo(this.collection,'bomb:exploded', this.render);
-        },
         render: function(){
             var context = {message:""};
             if(this.collection.exploded){
                 context.message = 'You Fail!!';
             }
-            if(this.collection.remaining() === 0){
+            if(this.collection.numberOfSafe() === 0){
                 context.message = 'Success !!';
             }
             var dom = this.template(context);
@@ -218,4 +224,4 @@
         }
     });
 
-})(window.Backbone, window._, window.$);
+})(window.Backbone, window._);
