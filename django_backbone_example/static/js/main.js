@@ -105,6 +105,7 @@
                 this.add(model);
             }
             this._fillCount();
+            this.trigger('new game started');
         },
         width: function(){
             return Math.sqrt(this.length);
@@ -118,7 +119,6 @@
            }, 0);
         }
     });
-
 
     window.ButtonnView = Backbone.View.extend({
         template: _.template("<button class='BombBtn <%= btn %>' data-button><%=content%></button>"),
@@ -159,24 +159,28 @@
 
             var dom = this.template(_.extend(templateContext,attributes));
             this.$el.html(dom);
+            if(this.isLast){
+                this.$el.addClass('BtnView--last');
+            }
             return this;
         }
     });
 
-    window.NewLineButtonView = window.ButtonnView.extend({
-        className: "BtnView BtnView--last"
-    });
-
     window.GameView = Backbone.View.extend({
         childView : window.ButtonnView,
+        initialize: function(){
+            this.listenTo(this.collection,'new game started', this.render);
+        },
         render: function(){
+            this.$el.html('');
             this.collection.each(function(model, index){
-                var ChildView = window.ButtonnView;
+                var isLast = false;
                 if( (index % this.collection.width()) === 0 ){
-                    ChildView = window.NewLineButtonView;
+                    isLast = true;
                 }
-                var view = new ChildView({
-                    model: model
+                var view = new this.childView({
+                    model: model,
+                    isLast: isLast
                 });
                 this.$el.append(view.render().el); // adding all the person objects.
             }, this);
@@ -198,6 +202,7 @@
             return this;
         }
     });
+
     window.Message = Backbone.View.extend({
         template: _.template('<%=message%>'),
         initialize: function(){
@@ -218,4 +223,17 @@
         }
     });
 
-})(window.Backbone, window._, window.$);
+    window.WidthView = Backbone.View.extend({
+        template: _.template("<input id='width' value='<%=width%>'></input><button class='play'>PLAY</button>"),
+        events:{
+            'click .play': 'setWidth'
+        },
+        setWidth:function(){
+            this.collection.fillModels($('#width').val());
+        },
+        render: function(){
+            this.$el.html(this.template({width: this.collection.width()}));
+        }
+    });
+
+})(window.Backbone, window._);
