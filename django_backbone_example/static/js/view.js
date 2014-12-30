@@ -1,13 +1,13 @@
-(function(Backbone, _, $ ){
+(function(Backbone, _){
     'use strict';
 
     window.ButtonnView = Backbone.View.extend({
         template: _.template(
-            "<button class='BombBtn <%= btnClass %>' data-button><%=content%></button>"
+            "<button class='BombBtn <%= btnClass %>'><%=content%></button>"
         ),
         events:{
-            'click [data-button]': 'handleClick',
-            'contextmenu [data-button]': 'handleRightClick'
+            'click': 'handleClick',
+            'contextmenu': 'handleRightClick'
         },
         className: 'BtnView',
         initialize:function(){
@@ -113,4 +113,4 @@
     });
 
 
-})(window.Backbone, window._, window.$);
+})(window.Backbone, window._);

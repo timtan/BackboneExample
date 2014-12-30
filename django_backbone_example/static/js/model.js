@@ -1,4 +1,4 @@
-(function(Backbone, _, $ ){
+(function(Backbone, _ ){
     'use strict';
 
     var BombModelState = {
@@ -37,10 +37,14 @@
                 return;
             }
             if(this.hasBomb()){
-                this.set({gameState:BombModelState.EXPLODED});
+                this.set({
+                    gameState: BombModelState.EXPLODED
+                });
             }
             else{
-                this.set({gameState:BombModelState.CLEAN});
+                this.set({
+                    gameState: BombModelState.CLEAN
+                });
             }
         }
     });
@@ -117,4 +121,5 @@
         }
     });
 
-})(window.Backbone, window._, window.$);
+
+})(window.Backbone, window._);

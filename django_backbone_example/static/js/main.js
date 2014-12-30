@@ -1,21 +1,22 @@
-(function(Backbone, _, $ ){
+(function(Backbone, _ ){
     'use strict';
     window.app = {
         init:function(){
             this.bombs = new window.BombCollection();
+
             this.numberInput = new window.NumberInput({
                 el: '#number-submit-form'
             });
             this.gameView = new window.GameView({
-                el:$('#mine'),
+                el:'#mine',
                 collection:this.bombs
             });
             this.counterView = new window.CountView({
-                el:$('#count'),
+                el:'#count',
                 collection:this.bombs
             });
             this.messageView = new window.Message({
-                el:$('#message'),
+                el:'#message',
                 collection: this.bombs
             });
 
@@ -43,4 +44,4 @@
     };
     _.extend(window.app, Backbone.Events);
 
-})(window.Backbone, window._, window.$);
+})(window.Backbone, window._);
