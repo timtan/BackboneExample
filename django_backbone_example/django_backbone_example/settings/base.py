@@ -136,7 +136,6 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'django_kss',
     'marionettejs',
-
 )
 
 # Apps specific for this project go here.

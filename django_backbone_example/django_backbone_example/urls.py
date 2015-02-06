@@ -4,6 +4,8 @@ from django.contrib import admin
 from django_kss.views import AutoStyleGuideView
 from rest_framework import routers
 from sample.views import PersonViewSet
+
+
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'people', PersonViewSet)
 
