@@ -9,7 +9,8 @@
             });
             this.gameView = new window.GameView({
                 el:'#mine',
-                collection:this.bombs
+                collection:this.bombs,
+                day : 'monday'
             });
             this.counterView = new window.CountView({
                 el:'#count',

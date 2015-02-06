@@ -1,0 +1,14 @@
+.ListGroup{
+  @extend .list-group;
+}
+.ListGroupItem{
+  @extend .list-group-item;
+}
+
+.ListGroupItem--stripped .ListGroupItem-content{
+  color: $gray-lighter;
+}
+
+.ListGroupItem-followingItem{
+  float: right;
+}

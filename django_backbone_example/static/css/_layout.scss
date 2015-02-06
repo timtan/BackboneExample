@@ -1,0 +1,11 @@
+
+.CenterRow {
+  @include make-row();
+}
+
+.CenterCol {
+  @include make-xs-column(10);
+  @include make-xs-column-offset(1);
+}
+
+

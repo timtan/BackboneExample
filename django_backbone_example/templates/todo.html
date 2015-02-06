@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load compress %}
+
+{% block body %}
+    <div class="container">
+        <div class="CenterRow">
+            <div class="CenterCol">
+                <div class="TodoRegion">
+
+                    <div class="TodoRegion-input"></div>
+                    <div class="TodoRegion-options"></div>
+                    <div class="TodoRegion-list"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'marionettejs.html' %}
+    <script type="text/template" id="item">
+        <span class="ListGroupItem-content"><%= content %></span>
+        <input type='checkbox' class="ListGroupItem-followingItem"
+        <% if( completed ){ %>
+        checked
+        <% } %>
+        />
+    </script>
+
+    <script type="text/template" id="todo-options">
+        <div class="btn-group">
+            <div class="btn btn-default" data-option=all> All </div>
+            <div class="btn btn-default" data-option=remaining> Remaining </div>
+            <div class="btn btn-default" data--completed> Completed </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="todo-input">
+        <div class="input-group">
+            <span class="input-group-addon">@</span>
+            <input name='input' type="text" class="form-control" placeholder="what you think today"/>
+        </div>
+    </script>
+
+    <script src="{% static 'js/todo/view.js' %}"></script>
+    <script src="{% static 'js/todo/model.js' %}"></script>
+    <script>
+
+        var Controller = Marionette.Controller.extend({
+            initialize: function(){
+                this.prepare();
+                this.setupEvents();
+            },
+            prepare: function(){
+                this.todoCollection = new TodoCollection();
+                this.inputView = new TodoControlView();
+                this.todoListView = new TodoListView({
+                    collection: this.todoCollection
+                });
+                this.optionsView = new OptionsView();
+            },
+            setupEvents: function(){
+                this.listenTo(this.inputView,"todo:input:submit", this._addTodoItem);
+            },
+            _addTodoItem: function(content){
+                var model = new TodoModel({
+                    content:content
+                });
+                this.todoCollection.add(model);
+            },
+            show: function(){
+                this.showInput();
+                this.showList();
+                $('.TodoRegion-options').html(
+                    this.optionsView.render().el
+                )
+            },
+            showInput:function(){
+                $('.TodoRegion-input').html(
+                        this.inputView.render().el
+                );
+            },
+            showList: function(options){
+                $('.TodoRegion-list').html(
+                     this.todoListView.render().el
+                );
+            }
+
+        });
+        controller = new Controller();
+        controller.show();
+    </script>
+{% endblock %}

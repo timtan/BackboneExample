@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load compress %}
+
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="jumbotron clearfix" id="main">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <form id='form-region' >
+                    <input type="text" name="price"/>
+                    <input type="submit"/>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    {% include  'marionettejs.html'%}
+    <script>
+        var View = Backbone.View.extend({
+            events:{
+                'click': 'handleClick'
+            },
+            handleClick: function(e){
+                alert('i am clicked')
+            }
+        });
+
+        new View({
+            el: '#main'
+        });
+
+        var FormView = Backbone.View.extend({
+            events:{
+                'submit': 'handleSubmit'
+            },
+            handleSubmit: function(e){
+                alert(e.target.price.value);
+            }
+        });
+
+        new FormView({
+            el: '#form-region'
+        })
+
+    </script>
+{% endblock %}

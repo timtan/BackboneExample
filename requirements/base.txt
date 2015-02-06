@@ -1,15 +1,15 @@
-Django>=1.7
-Unipath==1.0
-wsgiref==0.1.2
-django-braces==1.4.0
-logutils>=0.3.3
-django-compressor==1.4
-django-libsass==0.2
-sqlparse==0.1.14
--e git+https://github.com/timtan/Django-bootstrap3-scss@7527a8f4fb26caf73a0d36991db3dfca307c4c0d#egg=django_bootstrap3_sass-master
+Django==1.7.1
 Pygments==2.0.1
+Unipath==1.0
 django-appconf==0.6
+-e git+https://github.com/timtan/Django-bootstrap3-scss@7527a8f4fb26caf73a0d36991db3dfca307c4c0d#egg=django_bootstrap3_sass-master
+django-braces==1.4.0
+django-compressor==1.4
 django-kss==0.1.11
-django-marionettejs==0.1.3
+django-libsass==0.2
+django-marionettejs==2.3.0.0
 libsass==0.6.2
+logutils==0.3.3
 six==1.8.0
+sqlparse==0.1.14
+wsgiref==0.1.2

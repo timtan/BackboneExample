@@ -57,6 +57,8 @@
     window.GameView = Backbone.View.extend({
         childView : window.ButtonnView,
         render: function(){
+            console.log("day");
+            console.log(this.day);
             this.$el.empty();
             this.collection.each(function(model, index){
                 var ChildView = window.ButtonnView;

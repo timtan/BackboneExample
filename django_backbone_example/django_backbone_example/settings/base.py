@@ -133,6 +133,7 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'compressor',
     'bootstrap3',
+    'rest_framework',
     'django_kss',
     'marionettejs',
 
@@ -140,6 +141,7 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+    "sample",
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

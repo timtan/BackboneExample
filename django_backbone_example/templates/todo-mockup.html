@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load compress %}
+
+{% block body %}
+    <div class="container">
+        <div class="CenterRow">
+            <div class="CenterCol">
+                <div class="TodoRegion">
+
+                    <div class="TodoRegion-input">
+                        <div class="input-group">
+                            <span class="input-group-addon">@</span>
+                            <input type="text" class="form-control" placeholder="what you think today"/>
+                        </div>
+                    </div>
+                    <div class="TodoRegion-options">
+                       <div class="btn-group">
+                           <div class="btn btn-default"> All </div>
+                           <div class="btn btn-default"> Reamining </div>
+                           <div class="btn btn-default"> Completed </div>
+                       </div>
+                    </div>
+                    <div class="TodoRegion-list">
+                        <ul class="ListGroup">
+                            <li class="ListGroupItem">
+                                Cras justo odio
+                                <span class="ListGroupItem-followingItem">
+                                   <input type="checkbox"/>
+                                </span>
+                            </li>
+                            <li class="ListGroupItem ListGroupItem--stripped">
+                                Cras justo odio
+                                <span class="ListGroupItem-followingItem">
+                                   <input type="checkbox" checked/>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
