@@ -3,11 +3,12 @@ from django.views.generic import TemplateView
 from django.contrib import admin
 from django_kss.views import AutoStyleGuideView
 from rest_framework import routers
-from sample.views import PersonViewSet
+from sample.views import PersonViewSet,TodoItemViewSet
 
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'people', PersonViewSet)
+router.register(r'todo', TodoItemViewSet)
 
 
 class StyleGuideView(AutoStyleGuideView):

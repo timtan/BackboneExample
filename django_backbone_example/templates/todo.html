@@ -57,6 +57,7 @@
             prepare: function(){
                 this.inputView = new TodoControlView();
                 this.todoCollection = new TodoCollection();
+                this.todoCollection.fetch();
                 this.todoListView = new TodoListView({
                     state: this.state,
                     collection: this.todoCollection
@@ -67,12 +68,14 @@
             },
             setupEvents: function(){
                 this.listenTo(this.inputView,"todo:input:submit", this._addTodoItem);
+                this.listenTo(this.todoCollection,"change", function(model){
+                    model.save();
+                });
             },
             _addTodoItem: function(content){
-                var model = new TodoModel({
+                this.todoCollection.create({
                     content:content
                 });
-                this.todoCollection.add(model);
             },
             show: function(){
                 this.showInput();

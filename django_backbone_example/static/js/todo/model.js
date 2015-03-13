@@ -9,6 +9,7 @@
 
     window.TodoCollection = Backbone.Collection.extend({
         model: window.TodoModel,
+        url: "/api/todo",
         comparator: 'completed',
         initialize: function(){
             this.listenTo(this, "change:completed", this.sort);

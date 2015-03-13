@@ -12,6 +12,9 @@
             return false;
         }
     });
+    var EmptyView = Marionette.ItemView.extend({
+        template: _.template("<p> 起始中</p>")
+    });
 
     var TodoItemView = Marionette.ItemView.extend({
         template: "#item",
@@ -28,6 +31,7 @@
             this.listenTo(this.state, "change", this.render);
         },
         onRender: function(){
+            console.log(this.model);
             if(this.state.get("status") === 'complete'){
                 if(!this.model.get("completed")){
                     this.$el.hide();
@@ -42,7 +46,8 @@
             }
             this.$el.show();
             if(this.model.get("completed")){
-               this.$(".ListGroupItem").addClass("ListGroupItem--stripped");
+                this.$(".ListGroupItem").addClass("ListGroupItem--stripped");
+
             }
             else{
                 this.$(".ListGroupItem").removeClass("ListGroupItem--stripped");
@@ -54,6 +59,7 @@
     window.TodoListView = Marionette.CollectionView.extend({
         className: 'ListGroup',
         childView: TodoItemView,
+        emptyView: EmptyView,
         childViewOptions: function(){
             return {
                 state: this.state
