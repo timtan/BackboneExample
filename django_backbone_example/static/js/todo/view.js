@@ -1,17 +1,21 @@
 (function(Marionette, Backbone, $, _){
     'use strict';
-    window.TodoControlView = Marionette.ItemView.extend({
+
+    window.TodoInputView = Marionette.ItemView.extend({
         template: "#todo-input",
-        tagName: "form",
         events:{
-            submit: 'handleSubmit'
+            "submit form": 'handleSubmit'
         },
         handleSubmit: function(e){
-            this.trigger("todo:input:submit", e.target.input.value);
+            this.state.trigger("content:submit", e.target.input.value);
             $(e.target.input).val("");
             return false;
+        },
+        initialize: function(option){
+            this.state = option.state;
         }
     });
+
     var EmptyView = Marionette.ItemView.extend({
         template: _.template("<p> 起始中</p>")
     });

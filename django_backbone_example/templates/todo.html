@@ -3,19 +3,23 @@
 {% load compress %}
 
 {% block body %}
+
     <div class="container">
         <div class="CenterRow">
             <div class="CenterCol">
-                <div class="TodoRegion">
 
+                <div class="TodoRegion">
                     <div class="TodoRegion-input"></div>
                     <div class="TodoRegion-options"></div>
                     <div class="TodoRegion-list"></div>
-
                 </div>
+
             </div>
         </div>
     </div>
+
+
+
 
     {% include 'marionettejs.html' %}
     <script type="text/template" id="item">
@@ -34,19 +38,25 @@
     </script>
 
     <script type="text/template" id="todo-input">
-        <div class="input-group">
-            <span class="input-group-addon">@</span>
-            <input name='input' type="text" class="form-control" placeholder="what you think today"/>
-        </div>
+        <form action="">
+            <div class="input-group">
+                <span class="input-group-addon">@</span>
+                <input name='input' type="text" class="form-control" placeholder="what you think today"/>
+            </div>
+        </form>
     </script>
 
     <script src="{% static 'js/todo/view.js' %}"></script>
     <script src="{% static 'js/todo/model.js' %}"></script>
     <script>
 
+
+        // A Global State. Every Part of View Need IT
         var state = new Backbone.Model({
             status: 'all' //  all remaining completed
         });
+
+
 
         var Controller = Marionette.Object.extend({
             initialize: function(option){
@@ -55,44 +65,39 @@
                 this.setupEvents();
             },
             prepare: function(){
-                this.inputView = new TodoControlView();
+
                 this.todoCollection = new TodoCollection();
                 this.todoCollection.fetch();
+
+                this.inputView = new TodoInputView({
+                    state: this.state
+                });
+
                 this.todoListView = new TodoListView({
                     state: this.state,
                     collection: this.todoCollection
                 });
+
                 this.optionsView = new OptionsView({
                     state: this.state
                 });
+
             },
             setupEvents: function(){
-                this.listenTo(this.inputView,"todo:input:submit", this._addTodoItem);
+                this.listenTo(this.state,"content:submit", this._addTodoItem);
                 this.listenTo(this.todoCollection,"change", function(model){
                     model.save();
                 });
+            },
+            show: function(){
+                $('.TodoRegion-input').html( this.inputView.render().el );
+                $('.TodoRegion-list').html( this.todoListView.render().el );
+                $('.TodoRegion-options').html( this.optionsView.render().el )
             },
             _addTodoItem: function(content){
                 this.todoCollection.create({
                     content:content
                 });
-            },
-            show: function(){
-                this.showInput();
-                this.showList();
-                $('.TodoRegion-options').html(
-                    this.optionsView.render().el
-                )
-            },
-            showInput:function(){
-                $('.TodoRegion-input').html(
-                        this.inputView.render().el
-                );
-            },
-            showList: function(options){
-                $('.TodoRegion-list').html(
-                     this.todoListView.render().el
-                );
             }
         });
 
@@ -102,35 +107,42 @@
         controller.show();
 
         var Router = Backbone.Router.extend({
-           routes:{
+            initialize: function(option){
+                this.state = option.state;
+            },
+            routes:{
                "":function(){
-                   state.set({
+                   this.state.set({
                        "status": 'all'
                    });
                },
                "all": function(){
-                   state.set({
+                   this.state.set({
                        "status": 'all'
                    });
                },
                "complete": function(){
-                   state.set({
+                   this.state.set({
                        "status": 'complete'
                    });
                },
                "remaining": function(){
-                   state.set({
+                   this.state.set({
                        "status": 'remaining'
                    });
                }
            }
         });
 
-        var router = new Router();
+        var router = new Router({
+            state: state
+        });
+
         state.on("change:status", function(model, value){
             router.navigate(value);
         });
 
         Backbone.history.start();
+
     </script>
 {% endblock %}
