@@ -6,7 +6,8 @@
 }
 
 .ListGroupItem--stripped .ListGroupItem-content{
-  color: $gray-lighter;
+  color: $gray-light;
+  text-decoration: line-through;
 }
 
 .ListGroupItem-followingItem{

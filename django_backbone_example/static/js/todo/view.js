@@ -14,8 +14,6 @@
     });
 
     var TodoItemView = Marionette.ItemView.extend({
-        tagName: 'li',
-        className: 'ListGroupItem',
         template: "#item",
         events:{
             'change': function(){
@@ -23,40 +21,72 @@
                     completed: !this.model.get('completed')
                 });
             }
-        }
-    });
-
-    var ClearedTodoItemView = TodoItemView.extend({
-        className: 'ListGroupItem ListGroupItem--stripped'
-    });
-
-    var BaseTodoListView = Marionette.CollectionView.extend({
-        tagName:'ul',
-        className: 'ListGroup',
-        getChildView: function(item){
-            if(item.get('completed')){
-                return ClearedTodoItemView;
+        },
+        initialize: function(option){
+            this.state = option.state;
+            this.listenTo(this.model, "change", this.render);
+            this.listenTo(this.state, "change", this.render);
+        },
+        onRender: function(){
+            if(this.state.get("status") === 'complete'){
+                if(!this.model.get("completed")){
+                    this.$el.hide();
+                    return;
+                }
             }
-            return TodoItemView;
+            if(this.state.get("status") === 'remaining'){
+                if(this.model.get("completed")){
+                    this.$el.hide();
+                    return;
+                }
+            }
+            this.$el.show();
+            if(this.model.get("completed")){
+               this.$(".ListGroupItem").addClass("ListGroupItem--stripped");
+            }
+            else{
+                this.$(".ListGroupItem").removeClass("ListGroupItem--stripped");
+            }
         }
     });
 
-    window.TodoListView = BaseTodoListView.extend({
-        initialize: function(){
+
+    window.TodoListView = Marionette.CollectionView.extend({
+        className: 'ListGroup',
+        childView: TodoItemView,
+        childViewOptions: function(){
+            return {
+                state: this.state
+            };
+        },
+        initialize: function(option){
+            this.state = option.state;
             this.listenTo(this.collection,'change',this.render);
         }
     });
+
 
     var OptionView = Marionette.ItemView.extend({
         tagName: 'button',
         className : 'btn btn-default',
         template: _.template("<%=content%>"),
-        modelEvents:{
-            change: 'render'
-        },
         events:{
             click: function(){
-                this.model.trigger('clicked', this.model);
+                this.state.set({
+                    status: this.model.get("status")
+                });
+            }
+        },
+        initialize: function(option){
+            this.state = option.state;
+            this.listenTo(this.state, 'change', this.render);
+        },
+        onRender: function(){
+            if(this.model.get("status") === this.state.get("status")) {
+               this.$el.addClass("btn-info");
+            }
+            else{
+                this.$el.removeClass("btn-info");
             }
         }
     });
@@ -65,16 +95,18 @@
         className: 'btn-group',
         childView: OptionView,
         template: false,
-        initialize: function(){
+        childViewOptions: function(){
+            return {
+                state: this.state
+            };
+        },
+        initialize: function(option){
+            this.state = option.state;
             this.collection = new Backbone.Collection([
-                {status: 'active', 'content':'all'},
-                {status: 'inactive', 'content':'remaining'}
+                {status: 'all', 'content':'all'},
+                {status: 'complete', 'content':'complete'},
+                {status: 'remaining', 'content':'remaining'}
             ]);
-            this.listenTo(this.collection, 'clicked', function(model){
-                console.log(model);
-                _.all()
-            });
-
         }
     });
 
