@@ -86,6 +86,7 @@
             setupEvents: function(){
                 this.listenTo(this.state,"content:submit", this._addTodoItem);
                 this.listenTo(this.todoCollection,"change", function(model){
+                    console.log('Mom I am saved');
                     model.save();
                 });
             },

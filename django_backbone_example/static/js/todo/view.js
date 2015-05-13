@@ -35,7 +35,6 @@
             this.listenTo(this.state, "change", this.render);
         },
         onRender: function(){
-            console.log(this.model);
             if(this.state.get("status") === 'complete'){
                 if(!this.model.get("completed")){
                     this.$el.hide();
@@ -115,7 +114,8 @@
             this.collection = new Backbone.Collection([
                 {status: 'all', 'content':'all'},
                 {status: 'complete', 'content':'complete'},
-                {status: 'remaining', 'content':'remaining'}
+                {status: 'remaining', 'content':'remaining'},
+                {status: 'postpone', 'content':'postpone'},
             ]);
         }
     });

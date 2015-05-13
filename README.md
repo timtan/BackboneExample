@@ -1,8 +1,10 @@
-# Django Template for Dorm7
+# Django example with backbone
 
 This is a bootstrap example with backbone
 
 ## INSTALLATION & SETTINGS
+
+     you need to install pip and virtualenv first
 
 ### Setting Virtualenv
 
